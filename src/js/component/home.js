@@ -38,34 +38,44 @@ export class Home extends React.Component {
 	};
 	saveTask = event => {
 		if (event.keyCode === 13) {
-            const newArr = [...this.state.taskListed];
-            let newObject={label:this.state.task, done: false }
-            }
-			newArr.push(this.state.task);
+			const newArr = [...this.state.taskListed];
+			let newObject = { label: this.state.task, done: false };
+
+			newArr.push(newObject);
 			this.setState({
 				taskListed: newArr,
 				task: ""
-            });
-            fetch("https://assets.breatheco.de/apis/fake/todos/user/Gerdeth",{
-                    method: 'PUT', 
-                    body: JSON.stringify(newArr), 
-                    headers:{
-                        'Content-Type': 'application/json'
-                            }
-                }
-                )
-                .then(res => res.json())
-                .then(response => console.log('Success:', JSON.stringify(response)))
-                .catch(error => console.error('Error:', error));
-                            
-                            
-                        
+			});
+			fetch("https://assets.breatheco.de/apis/fake/todos/user/Gerdeth", {
+				method: "PUT",
+				body: JSON.stringify(newArr),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+				.then(res => res.json())
+				.then(response =>
+					console.log("Success:", JSON.stringify(response))
+				)
+				.catch(error => console.error("Error:", error));
+		}
 	};
+
 	deleteFunctionHandler = id => {
 		const returnArr = this.state.taskListed.filter(
 			(i, index) => index !== id
 		);
 		this.setState({ taskListed: returnArr });
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/Gerdeth", {
+			method: "PUT",
+			body: JSON.stringify(returnArr),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(res => res.json())
+			.then(response => console.log("Success:", JSON.stringify(response)))
+			.catch(error => console.error("Error:", error));
 	};
 
 	render() {
@@ -83,24 +93,28 @@ export class Home extends React.Component {
 		return (
 			<div className="container-fluid">
 				<div className="container">
-					<h1> To Do</h1>
-					<input
-						value={this.state.task}
-						onChange={this.updateTask}
-						onKeyUp={this.saveTask}
-						placeholder="What needs to be done"
-					/>
-					<br />
-					<br />
-					<ul>
-						{this.state.taskListed.length ? (
-							listDisplay
-						) : (
-							<li> No tasks, add a task</li>
-						)}
-					</ul>
+					<h1 className="title text-center"> To Do</h1>
+					<div className="body">
+						<input
+							className="stubs"
+							value={this.state.task}
+							onChange={this.updateTask}
+							onKeyUp={this.saveTask}
+							placeholder="What needs to be done"
+						/>
+
+						<ul className="lists">
+							{this.state.taskListed.length ? (
+								listDisplay
+							) : (
+								<li className="each align-middle">
+									No tasks, add a task
+								</li>
+							)}
+						</ul>
+					</div>
 				</div>
 			</div>
 		);
-	};
+	}
 }
